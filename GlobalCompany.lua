@@ -123,10 +123,10 @@
 GlobalCompany = {};
 GlobalCompany.dir = g_currentModDirectory;
 
-GlobalCompany.version = "1.7.1.0";
+GlobalCompany.version = "1.8.0.0";
 GlobalCompany.versionDate = "01.08.2020";
-GlobalCompany.currentVersionId = 1710; -- Mod Manager ID. (Version number without periods.)
-GlobalCompany.isDevelopmentVersion = false; -- This is for versions loaded from GIT.
+GlobalCompany.currentVersionId = 1800; -- Mod Manager ID. (Version number without periods.)
+GlobalCompany.isDevelopmentVersion = true; -- This is for versions loaded from GIT.
 GlobalCompany.isGreenWeekVersion = false;
 
 function GlobalCompany.initialLoad()
