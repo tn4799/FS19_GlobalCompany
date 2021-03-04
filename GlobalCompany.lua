@@ -174,7 +174,7 @@ function GlobalCompany.initialLoad()
 		g_company.debug:singleLogWrite(GC_DebugUtils.BLANK, text, GlobalCompany.version, GlobalCompany.versionDate);
 
 		addModEventListener(GlobalCompany);
-		
+
 		GlobalCompany.loadedFactories = {}
 		GlobalCompany.loadedDynamicStorages = {}
 		GlobalCompany.loadedAnimalFeeders = {}
@@ -201,10 +201,10 @@ function GlobalCompany.initialLoad()
 		g_company.modManager:initDevelopmentWarning(GlobalCompany.isDevelopmentVersion);
 
 		GlobalCompany.loadBaseGameGuiFiles(GlobalCompany.dir .. "gui/baseGame/");
-		
+
 		GlobalCompany.loadSourceFiles();
 		GlobalCompany.loadPlaceables();
-		
+
 		g_company.gui:preLoad()
 
 		g_company.farmlandOwnerListener = GC_FarmlandOwnerListener:new()
@@ -217,9 +217,9 @@ function GlobalCompany.initialLoad()
 		g_company.globalMarket = GC_GlobalMarket:new()
 
 		GlobalCompany.loadEnviroment(modNameCurrent, GlobalCompany.dir .. "xml/globalCompany.xml", false);
-		
-		g_company.modManager:initSelectedMods()	
-		
+
+		g_company.modManager:initSelectedMods()
+
 		g_company.languageManager:loadModLanguageFiles(GlobalCompany.modLanguageFiles);
 
 		local xmlFileCurrentMod = nil;
@@ -232,10 +232,10 @@ function GlobalCompany.initialLoad()
 			if modName == modNameCurrent then
 				xmlFileCurrentMod = xmlFile;
 			else
-				g_company.specializations:loadFromXML(modName, xmlFile);	
+				g_company.specializations:loadFromXML(modName, xmlFile);
 			end;
 		end;
-		g_company.specializations:loadFromXML(modNameCurrent, xmlFileCurrentMod);	
+		g_company.specializations:loadFromXML(modNameCurrent, xmlFileCurrentMod);
 	else
 		getfenv(0)["g_company"] = nil;
 	end;
@@ -513,11 +513,11 @@ function GlobalCompany.loadSourceFiles()
 	source(GlobalCompany.dir .. "events/GC_ProductionDynamicStorageCustomTitleEvent.lua");
 	source(GlobalCompany.dir .. "events/GC_GmSendMoneyEvent.lua");
 	source(GlobalCompany.dir .. "events/GC_NetworkManagerInitEvent.lua");
-	
+
 
 	--|| Specializations ||--
 	--source(GlobalCompany.dir .. "specializations/PalletExtended.lua");
-	
+
 end;
 
 --| Add Base GC Placeables |--
@@ -538,7 +538,7 @@ function GlobalCompany.loadPlaceables()
 end;
 
 function GlobalCompany:registerObject(object)
-	--if GlobalCompany:getIsServer() then		
+	--if GlobalCompany:getIsServer() then
 		object.gcId = GlobalCompany.objectId
 		table.insert(GlobalCompany.objects, object)
 		GlobalCompany.objectId = GlobalCompany.objectId + 1
@@ -594,7 +594,7 @@ end;
 function GlobalCompany:loadMap()
 	g_company.debug:loadConsoleCommands();
 	--g_company.networkManager:register(true)
-	
+
 	g_company.gui:load()
 
 	local fillLevelsDisplay = GC_FillLevelsDisplay.new(g_baseHUDFilename)
@@ -607,7 +607,7 @@ function GlobalCompany:loadMap()
 		else
 			fillLevelsDisplay:delete()
 		end
-	end	
+	end
 
 	-- for modName, xmlFile in pairs(GlobalCompany.environments) do
 		-- for xmlLoad, _ in pairs(GlobalCompany.xmlLoads) do
@@ -653,7 +653,7 @@ function GlobalCompany:update(dt)
 			raisedUpdateable:update(dt);
 		end;
 	end;
-	
+
 	if g_dedicatedServerInfo == nil and g_company.fillLevelsDisplay ~= nil then
 		if not g_gui:getIsGuiVisible() and g_currentMission.controlledVehicle == nil then
 			g_company.fillLevelsDisplay:update(dt)
@@ -675,7 +675,7 @@ function GlobalCompany:delete()
 		g_company.fillLevelsDisplay:delete()
 		g_company.fillLevelsDisplay = nil
 	end
-	
+
 	g_company.debug:deleteConsoleCommands();
 	g_company.languageManager:delete();
 
@@ -713,21 +713,21 @@ end;
 
 function GlobalCompany.loadBaseGameGuiFiles(directory)
 	source(directory .. "GC_FillLevelsDisplay.lua")
-	
+
 	g_gui:loadProfiles(directory .. "GC_GuiProfiles.xml")
-	
+
 	if g_gui ~= nil then
 		if g_company.productionFactoryDialog == nil then
 			source(directory .. "GC_ProductionFactoryGui.lua")
-			
+
 			local factoryDialog = GC_ProductionFactoryGui:new(g_i18n, g_messageCenter)
 			g_gui:loadGui(directory .. "GC_ProductionFactoryGui.xml", "GC_ProductionFactoryDialog", factoryDialog)
 			g_company.productionFactoryDialog = factoryDialog
 		end
-		
+
 		if g_company.animalDeliveryDialog == nil then
 			source(directory .. "GC_AnimalDeliveryDialog.lua")
-			
+
 			local animalDeliveryDialog = GC_AnimalDeliveryDialog:new()
 			g_gui:loadGui(directory .. "GC_AnimalDeliveryDialog.xml", "GC_AnimalDeliveryDialog", animalDeliveryDialog)
 			g_company.animalDeliveryDialog = animalDeliveryDialog

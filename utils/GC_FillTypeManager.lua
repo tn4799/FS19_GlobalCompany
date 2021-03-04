@@ -1,27 +1,27 @@
--- 
+--
 -- GlobalCompany - FillTypeManager
--- 
+--
 -- @Interface: --
 -- @Author: LS-Modcompany / kevink98
 -- @Date: 07.08.2019
 -- @Version: 1.1.0.0
--- 
+--
 -- @Support: LS-Modcompany
--- 
+--
 -- Changelog:
---		
+--
 -- 	v1.1.0.0 (07.08.2019):
 -- 		- add reg for Giants-filltypes
 --
 -- 	v1.0.0.0 (01.01.2019):
 -- 		- initial fs19 (kevink98)
--- 
+--
 -- Notes:
--- 
--- 
+--
+--
 -- ToDo:
 --
--- 
+--
 
 GC_FillTypeManager = {};
 local GC_FillTypeManager_mt = Class(GC_FillTypeManager);
@@ -38,7 +38,7 @@ function GC_FillTypeManager:new()
     self.extendedFillTypesCategories = {};
 
     self.xmlFiles = {};
-    
+
     g_company.addLoadable(self, self.load);
 
 	self.debugData = g_company.debug:getDebugData(GC_FillTypeManager.debugIndex);
@@ -52,7 +52,7 @@ function GC_FillTypeManager:loadFromXML(modName, xmlFile)
     if not hasXMLProperty(xmlFile, key) then
         return;
     end;
-    
+
     local filename = getXMLString(xmlFile, key .. "#filename");
     if filename == nil or filename == "" then
         return;
@@ -78,22 +78,22 @@ function GC_FillTypeManager:load()
             if not hasXMLProperty(xmlFile, xmlKey) then
                 break;
             end;
-            
+
             local name = getXMLString(xmlFile, xmlKey .. "#name");
             local title = getXMLString(xmlFile, xmlKey .. "#title");
             local showOnPriceTable = getXMLBool(xmlFile, xmlKey .. "#showOnPriceTable");
             local pricePerLiter = getXMLFloat(xmlFile, xmlKey .. "#pricePerLiter");
             local massPerLiter = getXMLFloat(xmlFile, xmlKey .. ".physics#massPerLiter") / 1000;
-            local maxPhysicalSurfaceAngle = getXMLInt(xmlFile, xmlKey .. ".physics#maxPhysicalSurfaceAngle");        
+            local maxPhysicalSurfaceAngle = getXMLInt(xmlFile, xmlKey .. ".physics#maxPhysicalSurfaceAngle");
             local hudOverlayFilename = getXMLString(xmlFile, xmlKey .. ".image#hud");
             local hudOverlayFilenameSmall = getXMLString(xmlFile, xmlKey .. ".image#hudSmall");
             local palletFilename = getXMLString(xmlFile, xmlKey .. ".pallet#filename");
-        
+
             --local s,_ = palletFilename:find("$data");
             --if s == nil then
                 --palletFilename = g_company.utils.createModPath(data.modName, palletFilename);
             --end;
-            
+
             title = g_company.languageManager:getText(string.format("%s_%s", string.gsub(data.modName, "FS19_", ""), string.gsub(title, "$l10n_", "")));
 
             g_fillTypeManager:addFillType(name, title, showOnPriceTable, pricePerLiter, massPerLiter, maxPhysicalSurfaceAngle, hudOverlayFilename, hudOverlayFilenameSmall, g_company.utils.createDirPath(data.modName), nil, {1,1,1}, palletFilename, false);
@@ -107,11 +107,11 @@ function GC_FillTypeManager:load()
             if not hasXMLProperty(xmlFile, xmlKey) then
                 break;
             end;
-            
+
             local name = getXMLString(xmlFile, xmlKey .. "#name");
-            local fillTypes = getXMLString(xmlFile, xmlKey);            
+            local fillTypes = getXMLString(xmlFile, xmlKey);
             local typesSplit = g_company.utils.splitString(fillTypes, " ");
-        
+
             for _,type in pairs(typesSplit) do
                 local categoryIndex = g_fillTypeManager.nameToCategoryIndex[name];
                 g_fillTypeManager:addFillTypeToCategory(g_fillTypeManager:getFillTypeIndexByName(type), categoryIndex);
@@ -125,11 +125,11 @@ function GC_FillTypeManager:load()
             if not hasXMLProperty(xmlFile, xmlKey) then
                 break;
             end;
-            
+
             local matHolderFileName = getXMLString(xmlFile, xmlKey .. "#filename");
             if matHolderFileName ~= nil then
                 loadI3DFile(g_company.utils.createModPath(data.modName, matHolderFileName));
-            end;       
+            end;
 
             i = i + 1;
         end;
@@ -140,7 +140,7 @@ function GC_FillTypeManager:load()
             if not hasXMLProperty(xmlFile, xmlKey) then
                 break
             end
-            
+
             local name = getXMLString(xmlFile, xmlKey .. "#name")
             local title = getXMLString(xmlFile, xmlKey .. "#title")
             local palletFilename = getXMLString(xmlFile, xmlKey .. ".pallet#filename")
@@ -158,10 +158,10 @@ function GC_FillTypeManager:load()
             if not hasXMLProperty(xmlFile, xmlKey) then
                 break
             end
-            
+
             local name = getXMLString(xmlFile, xmlKey .. "#name")
             local fillTypes = getXMLString(xmlFile, xmlKey .. "#fillTypes")
-                                
+
             self:addExtendedFillTypeCategory(name, g_company.utils.splitString(fillTypes, " "))
             i = i + 1
         end
@@ -169,13 +169,13 @@ function GC_FillTypeManager:load()
         if hasXMLProperty(xmlFile, "map.extendedFillTypesMaterials") then
             self:loadExtendedFilltypeMaterials(xmlFile, "map.extendedFillTypesMaterials", data.modName)
         end
-        
-    
+
+
 
     end
 
     if newFilltype then
-        g_currentMission.hud.fillLevelsDisplay:refreshFillTypes(g_fillTypeManager)       
+        g_currentMission.hud.fillLevelsDisplay:refreshFillTypes(g_fillTypeManager)
     end
 end
 
@@ -187,7 +187,7 @@ function GC_FillTypeManager:getNextId()
     return self.fillTypeId
 end
 
-function GC_FillTypeManager:addExtendedFillType(name, title, palletFilename, colorMat)    
+function GC_FillTypeManager:addExtendedFillType(name, title, palletFilename, colorMat)
     name = name:upper()
 
     if self.extendedFillTypesByName[name] ~= nil then
@@ -210,7 +210,7 @@ function GC_FillTypeManager:addExtendedFillType(name, title, palletFilename, col
     self.extendedFillTypesById[newFilltype.index] = newFilltype
 end
 
-function GC_FillTypeManager:addExtendedFillTypeCategory(name, fillTypes)   
+function GC_FillTypeManager:addExtendedFillTypeCategory(name, fillTypes)
     name = name:upper()
     if self.extendedFillTypesCategories[name] == nil then
         self.extendedFillTypesCategories[name] = {}
@@ -220,49 +220,49 @@ function GC_FillTypeManager:addExtendedFillTypeCategory(name, fillTypes)
         if self.extendedFillTypesByName[fillTypeName] == nil then
             g_company.debug:writeError(self.debugData, "Filltype %s not exist.", fillTypeName)
         end
-        
+
         table.insert(self.extendedFillTypesCategories[name], fillType)
         self.extendedFillTypesByName[fillTypeName].category = name
     end
 end
 
-function GC_FillTypeManager:getExtendedFillTypeByName(name)   
+function GC_FillTypeManager:getExtendedFillTypeByName(name)
     return self.extendedFillTypesByName[name:upper()]
 end
 
-function GC_FillTypeManager:getExtendedFillTypeByIndex(index)   
+function GC_FillTypeManager:getExtendedFillTypeByIndex(index)
     return self.extendedFillTypesById[index]
 end
 
-function GC_FillTypeManager:getExtendedFillTypeIndexByName(name)   
+function GC_FillTypeManager:getExtendedFillTypeIndexByName(name)
     if self.extendedFillTypesByName[name:upper()] ~= nil then
         return self.extendedFillTypesByName[name:upper()].index
     end
 end
 
-function GC_FillTypeManager:getExtendedFillTypeNameByIndex(index)   
+function GC_FillTypeManager:getExtendedFillTypeNameByIndex(index)
     if self.extendedFillTypesById[index] ~= nil then
         return self.extendedFillTypesById[index].name
     end
 end
 
 
-function GC_FillTypeManager:getExtendedFillTypeById(id)   
+function GC_FillTypeManager:getExtendedFillTypeById(id)
     return self.extendedFillTypesById[id]
 end
 
-function GC_FillTypeManager:getExtendedFillTypeByCategorie(name)   
+function GC_FillTypeManager:getExtendedFillTypeByCategorie(name)
     return self.extendedFillTypesCategories[name]
 end
 
-function GC_FillTypeManager:getIsExtendedFillTypeIsInCategorie(filltypename, categorie)   
+function GC_FillTypeManager:getIsExtendedFillTypeIsInCategorie(filltypename, categorie)
     return self.extendedFillTypesByName[filltypename].category == categorie
 end
 
-function GC_FillTypeManager:loadExtendedFilltypeMaterials(xmlFile, xmlKey, modName)    
+function GC_FillTypeManager:loadExtendedFilltypeMaterials(xmlFile, xmlKey, modName)
     local materialPath = getXMLString(xmlFile, xmlKey .. "#materialHolder");
-    local materials = GC_i3dLoader:loadMaterials(materialPath, g_company.utils.createDirPath(modName), xmlFile, xmlKey)   
-        
+    local materials = GC_i3dLoader:loadMaterials(materialPath, g_company.utils.createDirPath(modName), xmlFile, xmlKey)
+
     for name, material in pairs(materials) do
         if self.extendedFillTypesByName[name:upper()] ~= nil then
             self.extendedFillTypesByName[name:upper()].material = material
@@ -275,7 +275,7 @@ end
 
 
 --[[
-    
+
 function GC_FillTypeManager:registerFillType(name, lang)
     if self.fillTypesByName[name] ~= nil then
         --debug
@@ -301,7 +301,7 @@ function GC_FillTypeManager:loadFromXML(xmlFile)
         if not hasXMLProperty(xmlFile, key) then
             break;
         end;
-        
+
         local name = getXMLString(xmlFile, key .. "#name");
         local langName = getXMLString(xmlFile, key .. "#langName");
         table.insert(insertFillTypes, self:registerFillType(name, langName));
@@ -318,7 +318,7 @@ function GC_FillTypeManager:readFillTypesFromXML(xmlFile, xmlKey)
         if not hasXMLProperty(xmlFile, key) then
             break;
         end;
-        
+
         local name = getXMLString(xmlFile, key .. "#name");
         table.insert(fillTypes, self:getFillTypeByName(name));
         i = i + 1;

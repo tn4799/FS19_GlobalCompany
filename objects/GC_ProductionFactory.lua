@@ -424,6 +424,8 @@ function GC_ProductionFactory:load(nodeId, xmlFile, xmlKey, indexName, isPlaceab
 					inputProduct.title = string.format(g_company.languageManager:getText("GC_Input_Title_Backup"), self.numInputProducts + 1)
 				end
 
+				inputProduct.isGlobal = Utils.getNoNil(getXMLBool(xmlFile, inputProductKey .. "#isGlobal"), false)
+
 				inputProduct.unitLang = g_company.languageManager:getText(getXMLString(xmlFile, inputProductKey .. "#unitLang"))
 
 				local inputProductId = #self.inputProducts + 1
@@ -671,6 +673,7 @@ function GC_ProductionFactory:load(nodeId, xmlFile, xmlKey, indexName, isPlaceab
 						outputProduct.fillTypeIndex = fillTypeIndex
 						outputProduct.lastFillTypeIndex = fillTypeIndex
 						outputProduct.capacity = Utils.getNoNil(getXMLInt(xmlFile, outputProductKey .. "#capacity"), 1000)
+						outputProduct.isGlobal = Utils.getNoNil(getXMLBool(xmlFile, outputProductKey .. "#isGlobal"), false)
 
 						-- Using like a constructor this could be set false so the building remains.
 						outputProduct.removeFillLevelOnSell = Utils.getNoNil(getXMLBool(xmlFile, outputProductKey .. "#removeFillLevelOnSell"), true)
